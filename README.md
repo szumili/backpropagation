@@ -4,7 +4,7 @@ This project implements a neural network with backpropagation to recognize handw
 
 ## Features
 - Interactive interface for drawing digits
-- Pre-trained weights (*wagi1.txt, wagi2.txt, wagi3.txt, wagi4.txt*) loading/saving functionality
+- Pre-trained weights loading/saving functionality (*wagi1.txt, wagi2.txt, wagi3.txt, wagi4.txt*) 
 - Visualization of recognition confidence scores
 - Various image manipulation tools (noise, negation, shifting)
 
