@@ -26,6 +26,8 @@ class Grid(QWidget):
         self.zbior_uczacy()
         self.siec_tworzenie()
 
+        self.drawing = True
+
 
         for row in range(height):
             for col in range(width):
@@ -116,52 +118,52 @@ class Grid(QWidget):
         
         # 0
         buttonZero = QPushButton('Draw 0')
-        buttonZero.clicked.connect(self.drawZero)
+        buttonZero.clicked.connect(lambda: self.drawNumber(0))
         self.layoutButtons.addWidget(buttonZero)
 
         # 1 
         buttonOne = QPushButton('Draw 1')
-        buttonOne.clicked.connect(self.drawOne)
+        buttonOne.clicked.connect(lambda: self.drawNumber(1))
         self.layoutButtons.addWidget(buttonOne)
 
         # 2
         buttonTwo = QPushButton('Draw 2')
-        buttonTwo.clicked.connect(self.drawTwo)
+        buttonTwo.clicked.connect(lambda: self.drawNumber(2))
         self.layoutButtons.addWidget(buttonTwo)
 
         # 3
         buttonThree = QPushButton('Draw 3')
-        buttonThree.clicked.connect(self.drawThree)
+        buttonThree.clicked.connect(lambda: self.drawNumber(3))
         self.layoutButtons.addWidget(buttonThree)
 
         # 4
         buttonFour = QPushButton('Draw 4')
-        buttonFour.clicked.connect(self.drawFour)
+        buttonFour.clicked.connect(lambda: self.drawNumber(4))
         self.layoutButtons.addWidget(buttonFour)
 
         # 5
         buttonFive = QPushButton('Draw 5')
-        buttonFive.clicked.connect(self.drawFive)
+        buttonFive.clicked.connect(lambda: self.drawNumber(5))
         self.layoutButtons.addWidget(buttonFive)
 
         # 6
         buttonSix = QPushButton('Draw 6')
-        buttonSix.clicked.connect(self.drawSix)
+        buttonSix.clicked.connect(lambda: self.drawNumber(6))
         self.layoutButtons.addWidget(buttonSix)
 
         # 7
         buttonSeven = QPushButton('Draw 7')
-        buttonSeven.clicked.connect(self.drawSeven)
+        buttonSeven.clicked.connect(lambda: self.drawNumber(7))
         self.layoutButtons.addWidget(buttonSeven)
 
         # 8
         buttonEight = QPushButton('Draw 8')
-        buttonEight.clicked.connect(self.drawEight)
+        buttonEight.clicked.connect(lambda: self.drawNumber(8))
         self.layoutButtons.addWidget(buttonEight)
 
         # 9
         buttonNine = QPushButton('Draw 9')
-        buttonNine.clicked.connect(self.drawNine)
+        buttonNine.clicked.connect(lambda: self.drawNumber(9))
         self.layoutButtons.addWidget(buttonNine)
 
 
@@ -217,8 +219,11 @@ class Grid(QWidget):
 
     def whichPixel(self):
         # y - row, x - column
-        podstawowa = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
-
+        try:
+            podstawowa = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
+        except:
+            podstawowa = [[-1, -1]]
+        
 
         # to make the line thicker
         pstwo = np.random.uniform(0,1) 
@@ -625,48 +630,6 @@ class Grid(QWidget):
                 color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
                   
-
-    
-    def drawZero(self):
-        self.drawNumber(0)
-
-    def drawOne(self):
-        self.drawNumber(1)
-        
-    def drawTwo(self):
-        self.drawNumber(2)
-        
-    def drawThree(self):
-        self.drawNumber(3) 
-        
-    def drawFour(self):
-        self.drawNumber(4)
-        
-    def drawFive(self):
-        self.drawNumber(5)
-        
-    def drawSix(self):
-        self.drawNumber(6)
-        
-    def drawSeven(self):
-        self.drawNumber(7)
-        
-    def drawEight(self):
-        self.drawNumber(8)
-        
-    def drawNine(self):
-        self.drawNumber(9)
-        
-    
-
-
-
-
-
-
-
-
-
 
 
 
