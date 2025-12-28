@@ -1,10 +1,14 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox #, QInputDialog
-from PyQt5.QtCore import Qt
 import sys
+
 import numpy as np
-from random import choice, sample 
 import matplotlib.pyplot as plt
+
+from random import choice, sample 
 from keras.datasets import mnist
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
+from PyQt5.QtCore import Qt
+
 
 
 class Grid(QWidget):
