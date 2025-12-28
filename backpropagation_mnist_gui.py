@@ -184,6 +184,7 @@ class Grid(QWidget):
             self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black")
         return toggle
     
+    
 
     # drawing by hand 
     
@@ -613,11 +614,9 @@ class Grid(QWidget):
 
 
  
-            
 
-    
-    def drawZero(self):
-        cyfra = choice(self.numbers_from_mnist[0]) # picking a sample for a chosen digit
+    def drawNumber(self, digit):
+        cyfra = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
         print(cyfra)
         for row in range(self.height):
             for col in range(self.width):
@@ -625,97 +624,38 @@ class Grid(QWidget):
                 self.grid[row][col] = bool(cyfra[nr_el]) # required to have correct True/False values
                 color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
-          
+                  
+
+    
+    def drawZero(self):
+        self.drawNumber(0)
 
     def drawOne(self):
-        cyfra = choice(self.numbers_from_mnist[1])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(1)
         
     def drawTwo(self):
-        cyfra = choice(self.numbers_from_mnist[2])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(2)
         
     def drawThree(self):
-        cyfra = choice(self.numbers_from_mnist[3])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(3) 
         
     def drawFour(self):
-        cyfra = choice(self.numbers_from_mnist[4])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(4)
         
     def drawFive(self):
-        cyfra = choice(self.numbers_from_mnist[5])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(5)
         
     def drawSix(self):
-        cyfra = choice(self.numbers_from_mnist[6])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(6)
         
     def drawSeven(self):
-        cyfra = choice(self.numbers_from_mnist[7])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(7)
         
     def drawEight(self):
-        cyfra = choice(self.numbers_from_mnist[8])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(8)
         
     def drawNine(self):
-        cyfra = choice(self.numbers_from_mnist[9])  
-        print(cyfra)
-        for row in range(self.height):
-            for col in range(self.width):
-                nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) 
-                color = 'black' if bool(cyfra[nr_el]) else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.drawNumber(9)
         
     
 
