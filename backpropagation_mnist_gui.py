@@ -740,90 +740,7 @@ class Grid(QWidget):
             self.eta = eta
             self.errors = []
 
-            '''
-
-            try:
-                print('gdzie')
-                self.W1 = []
-                self.W2 = []
-                self.W3 = []
-                self.W4 = []
-
-                file1 = open(('wagi1.txt'), 'r')
-                file2 = open(('wagi2.txt'), 'r')
-                file3 = open(('wagi3.txt'), 'r')
-                file4 = open(('wagi4.txt'), 'r')
-
-                print('jest')
-
-                data1 = file1.read()
-                #print(data1)
-                data1 = data1.strip('\n').split(" ")
             
-                print(data1)
-                substrings = []
-                in_brackets = False
-                current_substring = []
-                for c in data1:
-                    if c == "[":
-                        in_brackets = True
-                    elif c == "]" and in_brackets:
-                        substrings.append(current_substring)
-                        current_substring = ""
-                        in_brackets = False
-                    elif in_brackets:
-                        current_substring.append(c)
-                
-                #if current_substring:
-                #    substrings.append(current_substring)
-                
-                print("The element between brackets : " , substrings)
-                print('oooooo')
-
-                lines = file1.readlines()
-                for line in lines:
-                    #print(line)
-                    print('blad')
-                    if len(line)>1: #ignorowanie gdy pusta linia
-                        line = line.strip()
-                        #print(line)
-                        self.W1.append([int(s) for s in line.split(' ')])
-
-                print('blad2')
-
-
-                lines = file2.readlines()
-                for line in lines:
-                    print(len(line))
-                    if len(line)>1: #ignorowanie gdy pusta linia
-                        line = line.strip()
-                        self.W2.append([int(s) for s in line.split(' ')])
-
-                lines = file3.readlines()
-                for line in lines:
-                    print(len(line))
-                    if len(line)>1: #ignorowanie gdy pusta linia
-                        line = line.strip()
-                        self.W3.append([int(s) for s in line.split(' ')])
-
-                lines = file4.readlines()
-                for line in lines:
-                    print(len(line))
-                    if len(line)>1: #ignorowanie gdy pusta linia
-                        line = line.strip()
-                        self.W4.append([int(s) for s in line.split(' ')])
-
-
-                #print('self.W1')
-            
-
-                file1.close()
-                file2.close()
-                file3.close()
-                file4.close()
-
-            except:
-            '''
             try:
                 print('wczytane')
 
@@ -846,7 +763,6 @@ class Grid(QWidget):
                     if len(split_s) > 1:
                         split_s[0] = split_s[0].replace('\n', '')
                         podlista.append(split_s[0].strip('\n').split(" "))
-                        #print(podlista)
                         podlista2 = []
                         for el in podlista[0]:
                             if len(el)>0:
@@ -862,7 +778,6 @@ class Grid(QWidget):
                     if len(split_s) > 1:
                         split_s[0] = split_s[0].replace('\n', '')
                         podlista.append(split_s[0].strip('\n').split(" "))
-                        #print(podlista)
                         podlista2 = []
                         for el in podlista[0]:
                             if len(el)>0:
@@ -878,7 +793,6 @@ class Grid(QWidget):
                     if len(split_s) > 1:
                         split_s[0] = split_s[0].replace('\n', '')
                         podlista.append(split_s[0].strip('\n').split(" "))
-                        #print(podlista)
                         podlista2 = []
                         for el in podlista[0]:
                             if len(el)>0:
@@ -894,7 +808,6 @@ class Grid(QWidget):
                     if len(split_s) > 1:
                         split_s[0] = split_s[0].replace('\n', '')
                         podlista.append(split_s[0].strip('\n').split(" "))
-                        #print(podlista)
                         podlista2 = []
                         for el in podlista[0]:
                             if len(el)>0:
@@ -908,9 +821,6 @@ class Grid(QWidget):
                 self.W4 = np.array(self.W4)
                 print(len(self.W4))
                 print(len(self.W4[0]))
-
-                #print(self.W4)
-                #print(2*np.random.random((self.hidden_dim_3, self.output_dim)) - 1 )
                 
                 print('gotowe')
 
@@ -936,84 +846,46 @@ class Grid(QWidget):
         def sigmoid_derivative(self, s):
             return s*(1-s)
         
-        #def relu(self, x):
-            '''
-            w = []
-            for el in x:
-                l = []
-                for e in el:
-                    l.append(max(e, 0))
-                l = np.array(l)
-                w.append(l)
-            w = np.array(w)
-            return w
-            '''
-            #return np.maximum(0, x)
-        
-        
-        #def relu_derivative(self, x):
-            '''
-            # Relu Derivative is 1 for x >= 0 and 0 for x < 0
-            # https://stackoverflow.com/questions/42042561/relu-derivative-in-backpropagation
-            return (x>=0)
-            '''
-            #return np.where(x <= 0, 0, 1)
         
 
         def forward(self, x):
-            #x = self.preprocessing(x)
 
             self.y0 = x.copy()
             self.a1 = np.dot(self.y0, self.W1) #+ self.b1
             self.y1 = self.sigmoid(self.a1)
-            #self.y1 = self.relu(self.a1)
 
             self.a2 = np.dot(self.y1, self.W2) #+ self.b1
             self.y2 = self.sigmoid(self.a2)
-            #self.y2 = self.relu(self.a2)
 
             self.a3 = np.dot(self.y2, self.W3) #+ self.b3
             self.y3 = self.sigmoid(self.a3)
-            #self.y3 = self.relu(self.a3)
 
             self.a4 = np.dot(self.y3, self.W4) #+ self.b4
             self.y4 = self.sigmoid(self.a4)
-            #self.y4 = self.relu(self.a4)
 
             return self.y4
         
         def backward(self, y):
-            #y = self.preprocessing(y)
 
             self.epsilon4 = y - self.y4
             self.delta4 = self.epsilon4 * self.sigmoid_derivative(self.y4) 
-            #self.delta4 = self.epsilon4 * self.relu_derivative(self.y4)
 
             self.epsilon3 = self.delta4.dot(self.W4.T)
             self.delta3 = self.epsilon3 * self.sigmoid_derivative(self.y3)
-            #self.delta3 = self.epsilon3 * self.relu_derivative(self.y3)
 
             self.epsilon2 = self.delta3.dot(self.W3.T)
             self.delta2 = self.epsilon2 * self.sigmoid_derivative(self.y2)
-            #self.delta2 = self.epsilon2 * self.relu_derivative(self.y2)
 
             self.epsilon1 = self.delta2.dot(self.W2.T)
             self.delta1 = self.epsilon1 * self.sigmoid_derivative(self.y1)
-            #self.delta1 = self.epsilon1 * self.relu_derivative(self.y1)
 
             self.W4 += self.eta*self.y3.T.dot(self.delta4)
             self.W3 += self.eta*self.y2.T.dot(self.delta3)
             self.W2 += self.eta*self.y1.T.dot(self.delta2)
             self.W1 += self.eta*self.y0.T.dot(self.delta1)
 
-            #print(self.W4, '\n')
-
-
-        #'''
 
         def save_weights(self):
-
-            #print(self.W1)
 
             with open(('wagi1.txt'), 'w') as file:
                 for el in (self.W1):
@@ -1043,7 +915,6 @@ class Grid(QWidget):
                 file.write('\n')
                 print('zapisano wagi4')
                 
-        #'''
 
 
         def train(self, x, y):
@@ -1080,29 +951,6 @@ class Grid(QWidget):
             
             return R
         
-            '''
-            self.forward(data)
-            print(np.sum(self.y4))
-            relevance = [None] * len(self.structure)
-            relevance[-1] = self.y4
-
-            for i in reversed(range(len(self.structure)-1)):
-                layer = self.structure[i]
-                if i == 0:
-                    relevance_score = np.dot(relevance[i+1], self.W1.T)
-                    relevance[i] = relevance_score * self.sigmoid_derivative(self.y0)
-                elif i == 1:
-                    relevance_score = np.dot(relevance[i+1], self.W2.T)
-                    relevance[i] = relevance_score * self.sigmoid_derivative(self.y1)
-                elif i == 2:
-                    relevance_score = np.dot(relevance[i+1], self.W3.T)
-                    relevance[i] = relevance_score * self.sigmoid_derivative(self.y2)
-                elif i == 3:
-                    relevance_score = np.dot(relevance[i+1], self.W4.T)
-                    relevance[i] = relevance_score * self.sigmoid_derivative(self.y3)
-
-            return relevance
-            '''
 
 
 
@@ -1111,7 +959,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 600, 600) # wspolrzedne polozenia na ekranie (prawo/lewo, gora/dol), szerokosc, wysokosc
-        #self.setWindowTitle("Pixel Grid")
         self.setWindowTitle("Zadanie domowe")
         self.grid = Grid(28,28,25)
         self.setCentralWidget(self.grid)
