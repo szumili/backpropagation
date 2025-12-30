@@ -1,7 +1,8 @@
 import numpy as np
 
-from random import sample 
 from keras.datasets import mnist
+from random import sample 
+from tqdm import tqdm
 
 # downloading data from mnist
 def getting_numbers_from_mnist():
@@ -44,8 +45,7 @@ def prepare_training_set(numbers_from_mnist):
         
     dataset = [] # training set x
     dataset_y = [] # training set y
-    for digit in numbers_from_mnist:
-        print(digit)
+    for i, digit in enumerate(tqdm(numbers_from_mnist, desc="Loading digits")):
         for digit_pattern in numbers_from_mnist[digit]:
 
             example1 = digit_pattern
@@ -58,7 +58,6 @@ def prepare_training_set(numbers_from_mnist):
 
             digit_list = np.zeros(10)
             digit_list[digit] = 1
-            print(digit_list)
             dataset_y.append(list(digit_list)) # we check whether it is a drawing of the digit for which we are creating the perceptron
     
     dataset.reverse()
