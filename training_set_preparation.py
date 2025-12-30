@@ -31,28 +31,35 @@ def getting_numbers_from_mnist():
     return numbers_from_mnist
 
 
-# training set 
-def prepare_training_set(self):
+def fourier_transform(x):
+    t = np.abs(np.fft.fft(x))
+    return ((t-np.mean(t))/np.std(t)) # standardization
 
-    self.zb_uczacy = {}
+
+
+# training set 
+def prepare_training_set(numbers_from_mnist):
+
+    training_set = {}
         
     dataset = [] # training set x
     dataset_y = [] # training set y
-    for cyfra in self.numbers_from_mnist:
-        print(cyfra)
-        for wzor in self.numbers_from_mnist[cyfra]:
-            przyklad1 = wzor
+    for digit in numbers_from_mnist:
+        print(digit)
+        for digit_pattern in numbers_from_mnist[digit]:
 
-            przyklad2 = self.fourier_transform(wzor)
-            przyklad = np.concatenate([przyklad1, przyklad2])
-            przyklad = np.array(przyklad)
+            example1 = digit_pattern
 
-            dataset.append(przyklad) # adding a sample to the training set
+            example2 = fourier_transform(digit_pattern)
+            example = np.concatenate([example1, example2])
+            example = np.array(example)
 
-            lista = np.zeros(10)
-            lista[cyfra] = 1
-            print(lista)
-            dataset_y.append(list(lista)) # and we check whether it is a drawing of the digit for which we are creating the perceptron
+            dataset.append(example) # adding a sample to the training set
+
+            digit_list = np.zeros(10)
+            digit_list[digit] = 1
+            print(digit_list)
+            dataset_y.append(list(digit_list)) # we check whether it is a drawing of the digit for which we are creating the perceptron
     
     dataset.reverse()
     dataset_y.reverse()
@@ -60,6 +67,8 @@ def prepare_training_set(self):
     dataset = np.array(dataset)
     dataset_y = np.array(dataset_y)
             
-    self.zb_uczacy['x'] = dataset
-    self.zb_uczacy['y'] = dataset_y
+    training_set['x'] = dataset
+    training_set['y'] = dataset_y
+
+    return training_set
         
