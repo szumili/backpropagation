@@ -16,7 +16,7 @@ This project implements a neural network with backpropagation to recognize handw
     - Use the "Wyczyść" button to clear the canvas
 
 2. Predefined Digits:
-    - Buttons "Narysuj 0"-"Narysuj 9" will generate random MNIST samples of each digit
+    - Buttons "Narysuj 0"-"Narysuj 9" will draw a random MNIST sample for each digit
 
 3. Image Manipulation:
     - "Zaszumianie": Adds random noise to the image
