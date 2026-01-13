@@ -438,48 +438,6 @@ class Grid(QWidget):
             print('error')
 
 
-    def heatmap(self):
-        data = {}
-        for number in range(10):
-            # only for 0
-            print(np.array_equal(self.numbers_from_mnist[number],self.numbers_from_mnist[0]))
-            data[number] = self.siec.lrp(np.array(self.numbers_from_mnist[number]))
-
-            print(len(data))
-            print(len(data[number]))
-            print(len(data[number][0]))
-            d = []
-            for j in range(len(data[number][0])):
-                suma = 0
-                for i in range(len(data[number])):
-                    suma += data[number][i][j]
-                d.append(suma/len(data[number]))
-
-            
-        
-            
-
-            przykladowe = []
-            print(len(d))
-            for row in range(self.height):
-                p = []
-                for col in range(self.width):
-                    p.append(d[row*self.width+col])
-                przykladowe.append(p)
-            
-
-            nr = number + 2
-            plt.figure(nr)
-            plt.clf() # clear
-
-            plt.imshow(przykladowe, cmap='hot', interpolation='nearest')
-            plt.colorbar()
-            plt.title(number)
-
-            plt.show()
-
-
-    
 
     # shift
 
@@ -774,26 +732,6 @@ class Grid(QWidget):
             wynik = self.forward(x)
             return(wynik)
 
-
-        def lrp(self, x): # Layer-wise Relevance Propagation
-            x = self.preprocessing(x)
-            h1 = self.sigmoid(np.dot(x, self.W1))
-            h2 = self.sigmoid(np.dot(h1, self.W2))
-            h3 = self.sigmoid(np.dot(h2, self.W3))
-            y = self.sigmoid(np.dot(h3, self.W4))
-            
-            R = y * (1 - y)  # output
-            R = np.dot(R, self.W4.T)  # 3 warstwa ukryta
-            R = R * self.sigmoid_derivative(h3)
-            R = np.dot(R, self.W3.T)  # 2 warstwa ukryta
-            R = R * self.sigmoid_derivative(h2)
-            R = np.dot(R, self.W2.T)  # 1 warstwa ukryta
-            R = R * self.sigmoid_derivative(h1)
-            R = np.dot(R, self.W1.T)  # input
-            R = R * self.sigmoid_derivative(x)
-            
-            return R
-        
 
 
 
