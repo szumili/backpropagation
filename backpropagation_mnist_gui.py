@@ -3,8 +3,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from random import choice, sample 
-from keras.datasets import mnist
+from random import choice
 
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
 
