@@ -545,10 +545,10 @@ class Grid(QWidget):
             try:
                 print('Reading weights from files...')
 
-                self.W1 = load_weights('wagi1.txt')
-                self.W2 = load_weights('wagi2.txt')
-                self.W3 = load_weights('wagi3.txt')
-                self.W4 = load_weights('wagi4.txt')
+                self.W1 = load_weights('weights1.txt')
+                self.W2 = load_weights('weights2.txt')
+                self.W3 = load_weights('weights3.txt')
+                self.W4 = load_weights('weights4.txt')
 
                 print('Done')
 
