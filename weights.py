@@ -23,3 +23,11 @@ def load_weights(weights_file):
 
     return np.array(W)
 
+
+def save_weights_to_file(W, file_name):
+
+    with open((file_name), 'w') as file:
+        for i, el in enumerate(tqdm(W, desc="Saving weights - %s" % file_name)):
+            file.write(str(el))
+            file.write(' ')
+        file.write('\n')
