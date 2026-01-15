@@ -3,10 +3,10 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from random import choice, sample 
-from keras.datasets import mnist
+from random import choice
 
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
+from weights import load_weights, save_weights_to_file
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
 from PyQt5.QtCore import Qt
@@ -543,91 +543,18 @@ class Grid(QWidget):
 
             
             try:
-                print('wczytane')
+                print('Loading weights from files...')
 
-                self.W1 = []
-                self.W2 = []
-                self.W3 = []
-                self.W4 = []
+                self.W1 = load_weights('weights1.txt')
+                self.W2 = load_weights('weights2.txt')
+                self.W3 = load_weights('weights3.txt')
+                self.W4 = load_weights('weights4.txt')
 
-                file1 = open(('wagi1.txt'), 'r')
-                file2 = open(('wagi2.txt'), 'r')
-                file3 = open(('wagi3.txt'), 'r')
-                file4 = open(('wagi4.txt'), 'r')
-
-                data1 = file1.read()
-                data1 = data1.strip("\n")
-                split_str = data1.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W1.append(np.array(podlista2))
-
-                data2 = file2.read()
-                data2 = data2.strip("\n")
-                split_str = data2.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W2.append(np.array(podlista2))
-
-                data3 = file3.read()
-                data3 = data3.strip("\n")
-                split_str = data3.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W3.append(np.array(podlista2))
-
-                data4 = file4.read()
-                data4 = data4.strip("\n")
-                split_str = data4.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W4.append(np.array(podlista2))
-
-
-                self.W1 = np.array(self.W1)
-                self.W2 = np.array(self.W2)
-                self.W3 = np.array(self.W3)
-                self.W4 = np.array(self.W4)
-                print(len(self.W4))
-                print(len(self.W4[0]))
-                
-                print('gotowe')
+                print('Done')
 
             except:
 
-                print('losowe')
+                print('Loading random weights...')
                 self.W1 = 2*np.random.random((self.input_dim, self.hidden_dim_1 )) - 1
                 #self.b1 = 2*np.random.random((self.input_dim, self.hidden_dim )) - 1 #biased
                 self.W2 = 2*np.random.random((self.hidden_dim_1, self.hidden_dim_2)) - 1
@@ -688,34 +615,10 @@ class Grid(QWidget):
 
         def save_weights(self):
 
-            with open(('wagi1.txt'), 'w') as file:
-                for el in (self.W1):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi1')
-
-            with open(('wagi2.txt'), 'w') as file:
-                for el in (self.W2):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi2')
-
-            with open(('wagi3.txt'), 'w') as file:
-                for el in (self.W3):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi3')
-
-            with open(('wagi4.txt'), 'w') as file:
-                for el in (self.W4):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi4')
-                
+            save_weights_to_file(self.W1, 'weights1.txt')
+            save_weights_to_file(self.W2, 'weights2.txt')
+            save_weights_to_file(self.W3, 'weights3.txt')
+            save_weights_to_file(self.W4, 'weights4.txt')
 
 
         def train(self, x, y):
@@ -740,7 +643,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 600, 600) # wspolrzedne polozenia na ekranie (prawo/lewo, gora/dol), szerokosc, wysokosc
-        self.setWindowTitle("Zadanie domowe")
+        self.setWindowTitle("Handwritten Digit Recognition")
         self.grid = Grid(28,28,25)
         self.setCentralWidget(self.grid)
         self.show()
