@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from random import choice
 
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
+from weights import load_weights
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
 from PyQt5.QtCore import Qt
@@ -544,84 +545,11 @@ class Grid(QWidget):
             try:
                 print('wczytane')
 
-                self.W1 = []
-                self.W2 = []
-                self.W3 = []
-                self.W4 = []
+                self.W1 = load_weights('wagi1.txt')
+                self.W2 = load_weights('wagi2.txt')
+                self.W3 = load_weights('wagi3.txt')
+                self.W4 = load_weights('wagi4.txt')
 
-                file1 = open(('wagi1.txt'), 'r')
-                file2 = open(('wagi2.txt'), 'r')
-                file3 = open(('wagi3.txt'), 'r')
-                file4 = open(('wagi4.txt'), 'r')
-
-                data1 = file1.read()
-                data1 = data1.strip("\n")
-                split_str = data1.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W1.append(np.array(podlista2))
-
-                data2 = file2.read()
-                data2 = data2.strip("\n")
-                split_str = data2.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W2.append(np.array(podlista2))
-
-                data3 = file3.read()
-                data3 = data3.strip("\n")
-                split_str = data3.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W3.append(np.array(podlista2))
-
-                data4 = file4.read()
-                data4 = data4.strip("\n")
-                split_str = data4.split("[")
-                for s in split_str[1:]:
-                    podlista = []
-                    split_s = s.split("]")
-                    if len(split_s) > 1:
-                        split_s[0] = split_s[0].replace('\n', '')
-                        podlista.append(split_s[0].strip('\n').split(" "))
-                        podlista2 = []
-                        for el in podlista[0]:
-                            if len(el)>0:
-                                podlista2.append(float(el))
-                        self.W4.append(np.array(podlista2))
-
-
-                self.W1 = np.array(self.W1)
-                self.W2 = np.array(self.W2)
-                self.W3 = np.array(self.W3)
-                self.W4 = np.array(self.W4)
-                print(len(self.W4))
-                print(len(self.W4[0]))
-                
                 print('gotowe')
 
             except:
