@@ -543,7 +543,7 @@ class Grid(QWidget):
 
             
             try:
-                print('Reading weights from files...')
+                print('Loading weights from files...')
 
                 self.W1 = load_weights('weights1.txt')
                 self.W2 = load_weights('weights2.txt')
@@ -554,7 +554,7 @@ class Grid(QWidget):
 
             except:
 
-                print('losowe')
+                print('Loading random weights...')
                 self.W1 = 2*np.random.random((self.input_dim, self.hidden_dim_1 )) - 1
                 #self.b1 = 2*np.random.random((self.input_dim, self.hidden_dim )) - 1 #biased
                 self.W2 = 2*np.random.random((self.hidden_dim_1, self.hidden_dim_2)) - 1
