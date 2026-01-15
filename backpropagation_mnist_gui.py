@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from random import choice
 
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
-from weights import load_weights
+from weights import load_weights, save_weights_to_file
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
 from PyQt5.QtCore import Qt
@@ -615,34 +615,10 @@ class Grid(QWidget):
 
         def save_weights(self):
 
-            with open(('wagi1.txt'), 'w') as file:
-                for el in (self.W1):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi1')
-
-            with open(('wagi2.txt'), 'w') as file:
-                for el in (self.W2):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi2')
-
-            with open(('wagi3.txt'), 'w') as file:
-                for el in (self.W3):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi3')
-
-            with open(('wagi4.txt'), 'w') as file:
-                for el in (self.W4):
-                    file.write(str(el))
-                    file.write(' ')
-                file.write('\n')
-                print('zapisano wagi4')
-                
+            save_weights_to_file(self.W1, 'weights1.txt')
+            save_weights_to_file(self.W2, 'weights2.txt')
+            save_weights_to_file(self.W3, 'weights3.txt')
+            save_weights_to_file(self.W4, 'weights4.txt')
 
 
         def train(self, x, y):
@@ -667,7 +643,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 600, 600) # wspolrzedne polozenia na ekranie (prawo/lewo, gora/dol), szerokosc, wysokosc
-        self.setWindowTitle("Zadanie domowe")
+        self.setWindowTitle("Handwritten Digit Recognition")
         self.grid = Grid(28,28,25)
         self.setCentralWidget(self.grid)
         self.show()
