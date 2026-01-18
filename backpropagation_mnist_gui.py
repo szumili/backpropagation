@@ -453,60 +453,15 @@ class Grid(QWidget):
         self.shift_digit(-1, 0)
 
     def down(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, 1, axis=0)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.shift_digit(1, 0)
 
     def left(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, -1, axis=1)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
+        self.shift_digit(-1, 1)
 
     def right(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, 1, axis=1)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
-
-
+        self.shift_digit(1, 1)
 
  
-
     def drawNumber(self, digit):
         cyfra = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
         print(cyfra)
