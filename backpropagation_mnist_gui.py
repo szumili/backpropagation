@@ -97,25 +97,25 @@ class Grid(QWidget):
 
         # up
         buttonUp = QPushButton('↑')
-        buttonUp.clicked.connect(self.up)
+        buttonUp.clicked.connect(lambda: self.shift_digit(-1, 0))
         self.layoutButtons.addWidget(buttonUp)
 
         
         # down
         buttonDown = QPushButton('↓')
-        buttonDown.clicked.connect(self.down)
+        buttonDown.clicked.connect(lambda: self.shift_digit(1, 0))
         self.layoutButtons.addWidget(buttonDown)
 
         
         # left
         buttonLeft = QPushButton('←')
-        buttonLeft.clicked.connect(self.left)
+        buttonLeft.clicked.connect(lambda: self.shift_digit(-1, 1))
         self.layoutButtons.addWidget(buttonLeft)
 
         
         # right
         buttonRight = QPushButton('→')
-        buttonRight.clicked.connect(self.right)
+        buttonRight.clicked.connect(lambda: self.shift_digit(1, 1))
         self.layoutButtons.addWidget(buttonRight)
 
         
@@ -446,20 +446,6 @@ class Grid(QWidget):
                 self.grid[row][col] = m[row][col] # required to have correct True/False values
                 color = 'black' if m[row][col] else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
-
-
-
-    def up(self):
-        self.shift_digit(-1, 0)
-
-    def down(self):
-        self.shift_digit(1, 0)
-
-    def left(self):
-        self.shift_digit(-1, 1)
-
-    def right(self):
-        self.shift_digit(1, 1)
 
  
     def drawNumber(self, digit):
