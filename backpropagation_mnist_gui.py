@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 from random import choice
 
+from grid import get_matrix
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
 from weights import load_weights, save_weights_to_file
 
@@ -96,25 +97,25 @@ class Grid(QWidget):
 
         # up
         buttonUp = QPushButton('↑')
-        buttonUp.clicked.connect(self.up)
+        buttonUp.clicked.connect(lambda: self.shift_digit(-1, 0))
         self.layoutButtons.addWidget(buttonUp)
 
         
         # down
         buttonDown = QPushButton('↓')
-        buttonDown.clicked.connect(self.down)
+        buttonDown.clicked.connect(lambda: self.shift_digit(1, 0))
         self.layoutButtons.addWidget(buttonDown)
 
         
         # left
         buttonLeft = QPushButton('←')
-        buttonLeft.clicked.connect(self.left)
+        buttonLeft.clicked.connect(lambda: self.shift_digit(-1, 1))
         self.layoutButtons.addWidget(buttonLeft)
 
         
         # right
         buttonRight = QPushButton('→')
-        buttonRight.clicked.connect(self.right)
+        buttonRight.clicked.connect(lambda: self.shift_digit(1, 1))
         self.layoutButtons.addWidget(buttonRight)
 
         
@@ -241,12 +242,9 @@ class Grid(QWidget):
 
     # show the matrix
     def matrix(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
+
+        matrix = get_matrix(self.height, self.width, self.grid)
+
         print(matrix) # terminal
 
         # show in messege box as 0 and 1
@@ -271,12 +269,8 @@ class Grid(QWidget):
 
     # adding noise to an image
     def szum(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
+
+        matrix = get_matrix(self.height, self.width, self.grid)
 
         ile_zaburzonych = 0
 
@@ -441,79 +435,19 @@ class Grid(QWidget):
 
     # shift
 
-    def up(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, -1, axis=0)
-
+    def shift_digit(self, shift, axis):
         
+        matrix = np.array(get_matrix(self.height, self.width, self.grid))
+
+        m = np.roll(matrix, shift, axis=axis)
+
         for row in range(self.height):
             for col in range(self.width):
                 self.grid[row][col] = m[row][col] # required to have correct True/False values
                 color = 'black' if m[row][col] else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
 
-    def down(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, 1, axis=0)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
-
-    def left(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, -1, axis=1)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") 
-
-    def right(self):
-        matrix = []
-        for row in range(self.height):
-            rows = []
-            for col in range(self.width):
-                rows.append(self.grid[row][col])
-            matrix.append(rows)
-        matrix = np.array(matrix)
-
-        m = np.roll(matrix, 1, axis=1)
-        
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col] = m[row][col] 
-                color = 'black' if m[row][col] else 'white' 
-                self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black")
-
-
-
  
-
     def drawNumber(self, digit):
         cyfra = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
         print(cyfra)
