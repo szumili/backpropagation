@@ -57,6 +57,8 @@ class Neural_Network():
         self.a4 = np.dot(self.y3, self.W4) #+ self.b4
         self.y4 = self.sigmoid(self.a4)
 
+        return self.y4
+
 
     def backward(self, y):
 
