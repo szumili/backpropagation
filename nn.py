@@ -25,8 +25,6 @@ class Neural_Network():
             self.W3 = load_weights('weights3.txt')
             self.W4 = load_weights('weights4.txt')
 
-            print('Done')
-
         except:
 
             print('Loading random weights...')
