@@ -24,13 +24,11 @@ class Grid(QWidget):
         self.grid = [[False for _ in range(width)] for _ in range(height)]
         self.buttons = [[QPushButton(self) for _ in range(width)] for _ in range(height)]
 
-
         self.numbers_from_mnist = getting_numbers_from_mnist()
         self.training_set = prepare_training_set(self.numbers_from_mnist)
-        self.siec_tworzenie()
+        self.nn_create()
 
         self.drawing = True
-
 
         for row in range(height):
             for col in range(width):
@@ -41,6 +39,7 @@ class Grid(QWidget):
 
         mainLayout = QHBoxLayout()
 
+
         # grid
         self.layout = QGridLayout()
         self.layout.setSpacing(0)
@@ -48,9 +47,7 @@ class Grid(QWidget):
             for col in range(width):
                 self.layout.addWidget(self.buttons[row][col], row, col)
 
-
         mainLayout.addLayout(self.layout)
-
 
 
         self.layoutButtons = QVBoxLayout() # layout with my buttons
@@ -58,7 +55,7 @@ class Grid(QWidget):
 
         # show the matrix
         buttonMatrix = QPushButton('Show the matrix')
-        buttonMatrix.clicked.connect(self.matrix)
+        buttonMatrix.clicked.connect(self.show_matrix)
         self.layoutButtons.addWidget(buttonMatrix)
 
         # empty
@@ -75,8 +72,6 @@ class Grid(QWidget):
         buttonWhich = QPushButton('What digit is this?')
         buttonWhich.clicked.connect(self.zgadywanie)
         self.layoutButtons.addWidget(buttonWhich)
-
-
 
 
         # noise
@@ -241,10 +236,9 @@ class Grid(QWidget):
 
 
     # show the matrix
-    def matrix(self):
+    def show_matrix(self):
 
         matrix = get_matrix(self.height, self.width, self.grid)
-
         print(matrix) # terminal
 
         # show in messege box as 0 and 1
@@ -254,8 +248,8 @@ class Grid(QWidget):
             for e in el:
                 l.append(int(e)) # changing into 0, 1
             m.append(' '.join(str(l))) # joining columns using spaces
-        macierz = '\n'.join(m) # joining rows using \n 
-        QMessageBox.about(self, "Matrix", macierz)
+        joined_matrix = '\n'.join(m) # joining rows using \n 
+        QMessageBox.about(self, "Matrix", joined_matrix)
 
 
     # cleaning the matrix
@@ -314,20 +308,19 @@ class Grid(QWidget):
 
 
 
-    def siec_tworzenie(self):
-
-        self.siec = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
-        return self.siec
+    def nn_create(self):
+        self.network = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
+        return self.network
 
     
     def siec_uczenie(self):
 
         for i in range(1000): 
-            self.siec.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
+            self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
 
         print('Nauczono')
 
-        self.siec.save_weights()
+        self.network.save_weights()
         print('Zapisano')
 
 
@@ -357,7 +350,7 @@ class Grid(QWidget):
             przyklad = np.concatenate([przyklad1, przyklad2])
             matrix = np.array(przyklad)
 
-            wynik = self.siec.predict(matrix) # predicting whether the matrix represents a given digit
+            wynik = self.network.predict(matrix) # predicting whether the matrix represents a given digit
             wwynik = wynik
             for i in range(len(wwynik)):
                 w = wwynik[i]
