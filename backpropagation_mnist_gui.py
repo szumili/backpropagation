@@ -242,12 +242,7 @@ class Grid(QWidget):
         print(matrix) # terminal
 
         # show in messege box as 0 and 1
-        m = []
-        for el in matrix:
-            ones_and_zeros = [int(e) for e in el] # changing into 0, 1
-            m.append(' '.join(str(ones_and_zeros))) # joining columns using spaces
-        mm = [' '.join(str([int(e) for e in el])) for el in matrix] # changing into 0, 1 and joining columns using spaces
-        print(mm == m)
+        m = [' '.join(str([int(e) for e in el])) for el in matrix] # changing into 0, 1 and joining columns using spaces
         joined_matrix = '\n'.join(m) # joining rows using \n 
         QMessageBox.about(self, "Matrix", joined_matrix)
 
