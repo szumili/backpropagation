@@ -9,6 +9,7 @@ from grid import get_matrix
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
 from nn import Neural_Network
 
+from tqdm import tqdm
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
 from PyQt5.QtCore import Qt
 
@@ -64,9 +65,9 @@ class Grid(QWidget):
         self.layoutButtons.addWidget(buttonEmpty)
 
         # training
-        buttonUczenie = QPushButton('Train')
-        buttonUczenie.clicked.connect(self.siec_uczenie)
-        self.layoutButtons.addWidget(buttonUczenie)
+        buttonTraining = QPushButton('Train')
+        buttonTraining.clicked.connect(self.nn_train)
+        self.layoutButtons.addWidget(buttonTraining)
 
         # guessing
         buttonWhich = QPushButton('What digit is this?')
@@ -308,16 +309,12 @@ class Grid(QWidget):
         return self.network
 
     
-    def siec_uczenie(self):
+    def nn_train(self):
 
-        for i in range(1000): 
+        for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
             self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
 
-        print('Nauczono')
-
         self.network.save_weights()
-        print('Zapisano')
-
 
 
 
