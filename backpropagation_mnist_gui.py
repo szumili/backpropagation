@@ -323,15 +323,9 @@ class Grid(QWidget):
             
         try: # if already trained
             
-            #m = get_matrix(self.height, self.width, self.grid)
-            #matrix = [el for row in m for el in row]
-
-            macierz = []
-            for row in range(self.height):
-                for col in range(self.width):
-                    macierz.append(int(self.grid[row][col]))
-            print(macierz) # terminal
-            #print(macierz == matrix)
+            m = get_matrix(self.height, self.width, self.grid)
+            matrix = [el for row in m for el in row]
+            macierz = matrix
 
             
             tak = []
