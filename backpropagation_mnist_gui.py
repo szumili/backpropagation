@@ -70,9 +70,9 @@ class Grid(QWidget):
         self.layoutButtons.addWidget(buttonTraining)
 
         # guessing
-        buttonWhich = QPushButton('What digit is this?')
-        buttonWhich.clicked.connect(self.zgadywanie)
-        self.layoutButtons.addWidget(buttonWhich)
+        buttonGuess = QPushButton('What digit is this?')
+        buttonGuess.clicked.connect(self.guess_digit)
+        self.layoutButtons.addWidget(buttonGuess)
 
 
         # noise
@@ -319,15 +319,19 @@ class Grid(QWidget):
 
 
     # guessing
-    def zgadywanie(self):
+    def guess_digit(self):
             
         try: # if already trained
+            
+            #m = get_matrix(self.height, self.width, self.grid)
+            #matrix = [el for row in m for el in row]
 
             macierz = []
             for row in range(self.height):
                 for col in range(self.width):
                     macierz.append(int(self.grid[row][col]))
             print(macierz) # terminal
+            #print(macierz == matrix)
 
             
             tak = []
