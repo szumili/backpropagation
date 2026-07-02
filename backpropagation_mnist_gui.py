@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from random import choice
 
-from grid import get_matrix
+from utils import get_matrix
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
 from nn import Neural_Network
 
@@ -76,9 +76,9 @@ class Grid(QWidget):
 
 
         # noise
-        buttonSzum = QPushButton('Add noise')
-        buttonSzum.clicked.connect(self.szum)
-        self.layoutButtons.addWidget(buttonSzum)
+        buttonNoise = QPushButton('Add noise')
+        buttonNoise.clicked.connect(self.add_noise)
+        self.layoutButtons.addWidget(buttonNoise)
 
 
 
@@ -258,7 +258,7 @@ class Grid(QWidget):
 
 
     # adding noise to an image
-    def szum(self):
+    def add_noise(self):
 
         matrix = get_matrix(self.height, self.width, self.grid)
 
@@ -276,8 +276,7 @@ class Grid(QWidget):
                 self.grid[row][col] = matrix[row][col] # required to have correct True/False values
                 color = 'black' if matrix[row][col] else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
-        print('narysowane')
-        print('zaszumiane: ', round(((ile_zaburzonych/(self.height*self.width))*100), 2), '%')
+        print('added noise: ', round(((ile_zaburzonych/(self.height*self.width))*100), 2), '%')
 
 
 
