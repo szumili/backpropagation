@@ -262,7 +262,7 @@ class Grid(QWidget):
 
         matrix = get_matrix(self.height, self.width, self.grid)
 
-        ile_zaburzonych = 0
+        noisy_count = 0
 
         for row in range(self.height):
             for col in range(self.width):
@@ -271,12 +271,12 @@ class Grid(QWidget):
                 pstwo = np.random.uniform(0,1)
                 if pstwo < 1/750:
                     matrix[row][col] = not matrix[row][col]
-                    ile_zaburzonych += 1
+                    noisy_count += 1
 
                 self.grid[row][col] = matrix[row][col] # required to have correct True/False values
                 color = 'black' if matrix[row][col] else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
-        print('added noise: ', round(((ile_zaburzonych/(self.height*self.width))*100), 2), '%')
+        print('added noise: ', round(((noisy_count/(self.height*self.width))*100), 2), '%')
 
 
 
@@ -428,13 +428,13 @@ class Grid(QWidget):
 
  
     def drawNumber(self, digit):
-        cyfra = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
-        print(cyfra)
+        digit_sample = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
+
         for row in range(self.height):
             for col in range(self.width):
                 nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) # required to have correct True/False values
-                color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
+                self.grid[row][col] = bool(digit_sample[nr_el]) # required to have correct True/False values
+                color = 'black' if bool(digit_sample[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
                   
 
