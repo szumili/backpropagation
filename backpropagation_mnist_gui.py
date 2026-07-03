@@ -205,7 +205,7 @@ class Grid(QWidget):
                         color = "black"
                         self.buttons[el[0]][el[1]].setStyleSheet(f"background-color: {color}; border: 1px solid black")
                 except:
-                    blad = True
+                    print('error')
 
             self.lastPoint = event.pos()
             self.update()
@@ -219,19 +219,19 @@ class Grid(QWidget):
     def whichPixel(self):
         # y - row, x - column
         try:
-            podstawowa = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
+            basic = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
         except:
-            podstawowa = [[-1, -1]]
+            basic = [[-1, -1]]
         
 
         # to make the line thicker
-        pstwo = np.random.uniform(0,1) 
-        if pstwo < 1/2:
-            podstawowa.append([podstawowa[0][0], podstawowa[0][1]-1])
-        elif pstwo > 1/2:
-            podstawowa.append([podstawowa[0][0]-1, podstawowa[0][1]])
+        prob = np.random.uniform(0,1) 
+        if prob < 1/2:
+            basic.append([basic[0][0], basic[0][1]-1])
+        else:
+            basic.append([basic[0][0]-1, basic[0][1]])
 
-        return podstawowa
+        return basic
 
 
 
@@ -268,8 +268,8 @@ class Grid(QWidget):
             for col in range(self.width):
 
                 # adding noise with a probability of 1/750
-                pstwo = np.random.uniform(0,1)
-                if pstwo < 1/750:
+                prob = np.random.uniform(0,1)
+                if prob < 1/750:
                     matrix[row][col] = not matrix[row][col]
                     noisy_count += 1
 
@@ -290,14 +290,14 @@ class Grid(QWidget):
                 matrix.append(int(self.grid[row][col]))
         print(matrix)
 
-        cyfra = [1-x for x in matrix]
-        print(cyfra)
+        inv = [1-x for x in matrix]
+        print(inv)
 
         for row in range(self.height):
             for col in range(self.width):
                 nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) # required to have correct True/False values
-                color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
+                self.grid[row][col] = bool(inv[nr_el]) # required to have correct True/False values
+                color = 'black' if bool(inv[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
 
 
@@ -324,7 +324,7 @@ class Grid(QWidget):
             
             m = get_matrix(self.height, self.width, self.grid)
             matrix = [el for row in m for el in row]
-            macierz = matrix
+            matrix_2 = matrix.copy()
 
             
             tak = []
@@ -333,9 +333,9 @@ class Grid(QWidget):
             score_2 = {}
             self.scores = {}
 
-            przyklad1 = macierz
+            przyklad1 = matrix_2
 
-            przyklad2 = fourier_transform(macierz)
+            przyklad2 = fourier_transform(matrix_2)
             przyklad = np.concatenate([przyklad1, przyklad2])
             matrix = np.array(przyklad)
 
