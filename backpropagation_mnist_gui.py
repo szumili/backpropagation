@@ -308,7 +308,7 @@ class Grid(QWidget):
         return self.network
 
     
-    def nn_train(self):
+    def nn_train(self):  
 
         for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
             self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
@@ -324,73 +324,24 @@ class Grid(QWidget):
             
             m = get_matrix(self.height, self.width, self.grid)
             matrix = [el for row in m for el in row]
-            matrix_2 = matrix.copy()
 
+            example1 = matrix.copy()
+
+            example2  = fourier_transform(example1)
+            example = np.concatenate([example1, example2])
+            example_matrix = np.array(example)
+
+            pred = self.network.predict(example_matrix) # predicting whether the matrix represents a given digit
+            self.scores = {i: p for i, p in enumerate(pred)}
+
+            chosen_digit = np.argmax(pred)
+            #chosen_digit_dict = max(self.scores, key=self.scores.get)
             
-            tak = []
-            nie = []
-            score = {}
-            score_2 = {}
-            self.scores = {}
-
-            przyklad1 = matrix_2
-
-            przyklad2 = fourier_transform(matrix_2)
-            przyklad = np.concatenate([przyklad1, przyklad2])
-            matrix = np.array(przyklad)
-
-            wynik = self.network.predict(matrix) # predicting whether the matrix represents a given digit
-            wwynik = wynik
-            for i in range(len(wwynik)):
-                w = wwynik[i]
-                self.scores[i] = w
-                if w >= 1/2:
-                    tak.append(i)
-                    score[i] = w
-                else:
-                    nie.append(i)
-                    score_2[i] = w
-
-            print(tak)
-            print(nie)
-            print(score)
-            print(score_2)
-
-            score = self.scores.copy()
-
-            max_score = 0
-            najprawdopodobniej = '?'
-            for nr in score:
-                if score[nr] > max_score:
-                    max_score = score[nr]
-                    najprawdopodobniej = str(nr)
-
-                
-
-            naj_z_podpisem = ['Najprawdopodobniej jest to cyfra: ', najprawdopodobniej]
-            naj = '\n'.join(naj_z_podpisem)
-
-            
-            t = (' '.join(str(tak))) # joining using spaces
-            t_z_podpisem = ['Może to być cyfra: ', t]
-            yes = '\n'.join(t_z_podpisem) #  joining using \n (t i podpis)
-            print(yes)
-
-            n = (' '.join(str(nie))) # joining using spaces
-            n_z_podpisem = ['Nie jest to raczej cyfra: ', n]
-            no = '\n'.join(n_z_podpisem) #  joining using \n (n i podpis)
-            print(no)
-
-            
-
-            odp = []
-            odp.append(naj)
-            wyniki = '\n'.join(odp)
+            chosen_text = '\n'.join(['Predicted digit: ', str(chosen_digit)])
 
             self.histogram()
 
-            QMessageBox.about(self, "Wyniki", wyniki)
-
+            QMessageBox.about(self, "Prediction", chosen_text)
 
         except Exception as e:
             print("Error:", e)
@@ -405,7 +356,7 @@ class Grid(QWidget):
             values = list(self.scores.values())
             plt.bar(range(len(self.scores)), values, tick_label=names)
 
-            plt.show()
+            plt.show(block=False)
 
         except:
             print('error')
