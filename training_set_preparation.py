@@ -4,6 +4,18 @@ from keras.datasets import mnist
 from random import sample 
 from tqdm import tqdm
 
+def numbers_to_dict(x, y):
+
+    numbers = {}
+
+    for num in range(10):
+
+        indices = np.where(y == num)[0]
+        numbers[num] = [x[id] for id in indices]
+
+    return numbers
+
+
 # downloading data from mnist
 def getting_numbers_from_mnist():
 
@@ -74,3 +86,7 @@ def prepare_training_set(numbers_from_mnist):
 
     return training_set
         
+
+
+if __name__ == "__main__":
+    print(getting_numbers_from_mnist()[0][0][0])
