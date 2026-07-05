@@ -9,6 +9,9 @@ def getting_numbers_from_mnist():
 
     numbers_from_mnist = {}
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    print(len(x_train), len(x_test))
+    print(np.bincount(y_train))
+    print(np.bincount(y_test))
 
     x_train = x_train.reshape(-1, 28*28) / 255.
     x_train[x_train >= 0.5] = 1
@@ -20,7 +23,7 @@ def getting_numbers_from_mnist():
 
         id_1 = [i for i, x in enumerate(list(y_train)) if x == num]
 
-        # random selection of 100 from each class
+        # random selection of 500 from each class
         index = sample(id_1, 500)
 
         lista = []

@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 
 from random import choice
 
-from grid import get_matrix
+from utils import get_matrix
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
 from nn import Neural_Network
 
+from tqdm import tqdm
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
 from PyQt5.QtCore import Qt
 
@@ -24,13 +25,11 @@ class Grid(QWidget):
         self.grid = [[False for _ in range(width)] for _ in range(height)]
         self.buttons = [[QPushButton(self) for _ in range(width)] for _ in range(height)]
 
-
         self.numbers_from_mnist = getting_numbers_from_mnist()
         self.training_set = prepare_training_set(self.numbers_from_mnist)
-        self.siec_tworzenie()
+        self.nn_create()
 
         self.drawing = True
-
 
         for row in range(height):
             for col in range(width):
@@ -41,6 +40,7 @@ class Grid(QWidget):
 
         mainLayout = QHBoxLayout()
 
+
         # grid
         self.layout = QGridLayout()
         self.layout.setSpacing(0)
@@ -48,9 +48,7 @@ class Grid(QWidget):
             for col in range(width):
                 self.layout.addWidget(self.buttons[row][col], row, col)
 
-
         mainLayout.addLayout(self.layout)
-
 
 
         self.layoutButtons = QVBoxLayout() # layout with my buttons
@@ -58,7 +56,7 @@ class Grid(QWidget):
 
         # show the matrix
         buttonMatrix = QPushButton('Show the matrix')
-        buttonMatrix.clicked.connect(self.matrix)
+        buttonMatrix.clicked.connect(self.show_matrix)
         self.layoutButtons.addWidget(buttonMatrix)
 
         # empty
@@ -67,22 +65,20 @@ class Grid(QWidget):
         self.layoutButtons.addWidget(buttonEmpty)
 
         # training
-        buttonUczenie = QPushButton('Train')
-        buttonUczenie.clicked.connect(self.siec_uczenie)
-        self.layoutButtons.addWidget(buttonUczenie)
+        buttonTraining = QPushButton('Train')
+        buttonTraining.clicked.connect(self.nn_train)
+        self.layoutButtons.addWidget(buttonTraining)
 
         # guessing
-        buttonWhich = QPushButton('What digit is this?')
-        buttonWhich.clicked.connect(self.zgadywanie)
-        self.layoutButtons.addWidget(buttonWhich)
-
-
+        buttonGuess = QPushButton('What digit is this?')
+        buttonGuess.clicked.connect(self.guess_digit)
+        self.layoutButtons.addWidget(buttonGuess)
 
 
         # noise
-        buttonSzum = QPushButton('Add noise')
-        buttonSzum.clicked.connect(self.szum)
-        self.layoutButtons.addWidget(buttonSzum)
+        buttonNoise = QPushButton('Add noise')
+        buttonNoise.clicked.connect(self.add_noise)
+        self.layoutButtons.addWidget(buttonNoise)
 
 
 
@@ -209,7 +205,7 @@ class Grid(QWidget):
                         color = "black"
                         self.buttons[el[0]][el[1]].setStyleSheet(f"background-color: {color}; border: 1px solid black")
                 except:
-                    blad = True
+                    print('error')
 
             self.lastPoint = event.pos()
             self.update()
@@ -223,39 +219,33 @@ class Grid(QWidget):
     def whichPixel(self):
         # y - row, x - column
         try:
-            podstawowa = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
+            basic = [[(self.lastPoint.y())//self.cell_size, (self.lastPoint.x())//self.cell_size]]
         except:
-            podstawowa = [[-1, -1]]
+            basic = [[-1, -1]]
         
 
         # to make the line thicker
-        pstwo = np.random.uniform(0,1) 
-        if pstwo < 1/2:
-            podstawowa.append([podstawowa[0][0], podstawowa[0][1]-1])
-        elif pstwo > 1/2:
-            podstawowa.append([podstawowa[0][0]-1, podstawowa[0][1]])
+        prob = np.random.uniform(0,1) 
+        if prob < 1/2:
+            basic.append([basic[0][0], basic[0][1]-1])
+        else:
+            basic.append([basic[0][0]-1, basic[0][1]])
 
-        return podstawowa
+        return basic
 
 
 
 
     # show the matrix
-    def matrix(self):
+    def show_matrix(self):
 
         matrix = get_matrix(self.height, self.width, self.grid)
-
         print(matrix) # terminal
 
         # show in messege box as 0 and 1
-        m = []
-        for el in matrix:
-            l = []
-            for e in el:
-                l.append(int(e)) # changing into 0, 1
-            m.append(' '.join(str(l))) # joining columns using spaces
-        macierz = '\n'.join(m) # joining rows using \n 
-        QMessageBox.about(self, "Matrix", macierz)
+        m = [' '.join(str([int(e) for e in el])) for el in matrix] # changing into 0, 1 and joining columns using spaces
+        joined_matrix = '\n'.join(m) # joining rows using \n 
+        QMessageBox.about(self, "Matrix", joined_matrix)
 
 
     # cleaning the matrix
@@ -268,26 +258,25 @@ class Grid(QWidget):
 
 
     # adding noise to an image
-    def szum(self):
+    def add_noise(self):
 
         matrix = get_matrix(self.height, self.width, self.grid)
 
-        ile_zaburzonych = 0
+        noisy_count = 0
 
         for row in range(self.height):
             for col in range(self.width):
 
                 # adding noise with a probability of 1/750
-                pstwo = np.random.uniform(0,1)
-                if pstwo < 1/750:
+                prob = np.random.uniform(0,1)
+                if prob < 1/750:
                     matrix[row][col] = not matrix[row][col]
-                    ile_zaburzonych += 1
+                    noisy_count += 1
 
                 self.grid[row][col] = matrix[row][col] # required to have correct True/False values
                 color = 'black' if matrix[row][col] else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
-        print('narysowane')
-        print('zaszumiane: ', round(((ile_zaburzonych/(self.height*self.width))*100), 2), '%')
+        print('added noise: ', round(((noisy_count/(self.height*self.width))*100), 2), '%')
 
 
 
@@ -301,114 +290,58 @@ class Grid(QWidget):
                 matrix.append(int(self.grid[row][col]))
         print(matrix)
 
-        cyfra = [1-x for x in matrix]
-        print(cyfra)
+        inv = [1-x for x in matrix]
+        print(inv)
 
         for row in range(self.height):
             for col in range(self.width):
                 nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) # required to have correct True/False values
-                color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
+                self.grid[row][col] = bool(inv[nr_el]) # required to have correct True/False values
+                color = 'black' if bool(inv[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
 
 
 
 
-    def siec_tworzenie(self):
-
-        self.siec = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
-        return self.siec
+    def nn_create(self):
+        self.network = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
+        return self.network
 
     
-    def siec_uczenie(self):
+    def nn_train(self):  
 
-        for i in range(1000): 
-            self.siec.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
+        for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
+            self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
 
-        print('Nauczono')
-
-        self.siec.save_weights()
-        print('Zapisano')
-
+        self.network.save_weights()
 
 
 
     # guessing
-    def zgadywanie(self):
+    def guess_digit(self):
             
         try: # if already trained
-
-            macierz = []
-            for row in range(self.height):
-                for col in range(self.width):
-                    macierz.append(int(self.grid[row][col]))
-            print(macierz) # terminal
-
             
-            tak = []
-            nie = []
-            score = {}
-            score_2 = {}
-            self.scores = {}
+            m = get_matrix(self.height, self.width, self.grid)
+            matrix = [el for row in m for el in row]
 
-            przyklad1 = macierz
+            example1 = matrix.copy()
 
-            przyklad2 = fourier_transform(macierz)
-            przyklad = np.concatenate([przyklad1, przyklad2])
-            matrix = np.array(przyklad)
+            example2  = fourier_transform(example1)
+            example = np.concatenate([example1, example2])
+            example_matrix = np.array(example)
 
-            wynik = self.siec.predict(matrix) # predicting whether the matrix represents a given digit
-            wwynik = wynik
-            for i in range(len(wwynik)):
-                w = wwynik[i]
-                self.scores[i] = w
-                if w >= 1/2:
-                    tak.append(i)
-                    score[i] = w
-                else:
-                    nie.append(i)
-                    score_2[i] = w
+            pred = self.network.predict(example_matrix) # predicting whether the matrix represents a given digit
+            self.scores = {i: p for i, p in enumerate(pred)}
 
-            print(tak)
-            print(nie)
-            print(score)
-            print(score_2)
-
-            score = self.scores.copy()
-
-            max_score = 0
-            najprawdopodobniej = '?'
-            for nr in score:
-                if score[nr] > max_score:
-                    max_score = score[nr]
-                    najprawdopodobniej = str(nr)
-
-                
-
-            naj_z_podpisem = ['Najprawdopodobniej jest to cyfra: ', najprawdopodobniej]
-            naj = '\n'.join(naj_z_podpisem)
-
+            chosen_digit = np.argmax(pred)
+            #chosen_digit_dict = max(self.scores, key=self.scores.get)
             
-            t = (' '.join(str(tak))) # joining using spaces
-            t_z_podpisem = ['Może to być cyfra: ', t]
-            yes = '\n'.join(t_z_podpisem) #  joining using \n (t i podpis)
-            print(yes)
-
-            n = (' '.join(str(nie))) # joining using spaces
-            n_z_podpisem = ['Nie jest to raczej cyfra: ', n]
-            no = '\n'.join(n_z_podpisem) #  joining using \n (n i podpis)
-            print(no)
-
-            
-
-            odp = []
-            odp.append(naj)
-            wyniki = '\n'.join(odp)
+            chosen_text = '\n'.join(['Predicted digit: ', str(chosen_digit)])
 
             self.histogram()
 
-            QMessageBox.about(self, "Wyniki", wyniki)
-
+            QMessageBox.about(self, "Prediction", chosen_text)
 
         except Exception as e:
             print("Error:", e)
@@ -423,7 +356,7 @@ class Grid(QWidget):
             values = list(self.scores.values())
             plt.bar(range(len(self.scores)), values, tick_label=names)
 
-            plt.show()
+            plt.show(block=False)
 
         except:
             print('error')
@@ -446,13 +379,13 @@ class Grid(QWidget):
 
  
     def drawNumber(self, digit):
-        cyfra = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
-        print(cyfra)
+        digit_sample = choice(self.numbers_from_mnist[digit]) # picking a sample for a chosen digit
+
         for row in range(self.height):
             for col in range(self.width):
                 nr_el = row*self.width+col
-                self.grid[row][col] = bool(cyfra[nr_el]) # required to have correct True/False values
-                color = 'black' if bool(cyfra[nr_el]) else 'white' # which element should have which colour
+                self.grid[row][col] = bool(digit_sample[nr_el]) # required to have correct True/False values
+                color = 'black' if bool(digit_sample[nr_el]) else 'white' # which element should have which colour
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
                   
 
