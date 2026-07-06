@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from random import choice
 
 from utils import get_matrix
-from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
+from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
 from nn import Neural_Network
 
 from tqdm import tqdm
@@ -25,8 +25,8 @@ class Grid(QWidget):
         self.grid = [[False for _ in range(width)] for _ in range(height)]
         self.buttons = [[QPushButton(self) for _ in range(width)] for _ in range(height)]
 
-        self.numbers_from_mnist = getting_numbers_from_mnist()
-        self.training_set = prepare_training_set(self.numbers_from_mnist)
+        train_dict, test_dict, self.numbers_from_mnist = getting_numbers_from_mnist()
+        self.train_set = prepare_dataset(train_dict)
         self.nn_create()
 
         self.drawing = True
@@ -205,7 +205,7 @@ class Grid(QWidget):
                         color = "black"
                         self.buttons[el[0]][el[1]].setStyleSheet(f"background-color: {color}; border: 1px solid black")
                 except:
-                    print('error')
+                    print('error: mouseMoveEvent')
 
             self.lastPoint = event.pos()
             self.update()
@@ -311,7 +311,7 @@ class Grid(QWidget):
     def nn_train(self):  
 
         for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
-            self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
+            self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
 
         self.network.save_weights()
 
@@ -359,7 +359,7 @@ class Grid(QWidget):
             plt.show(block=False)
 
         except:
-            print('error')
+            print('error: histogram')
 
 
 

@@ -45,7 +45,7 @@ def getting_numbers_from_mnist():
 
     numbers_from_mnist = {k: np.concatenate((train_dict[k], test_dict[k])) for k in train_dict}
 
-    return numbers_from_mnist
+    return train_dict, test_dict, numbers_from_mnist
 
 
 def fourier_transform(x):
@@ -55,9 +55,9 @@ def fourier_transform(x):
 
 
 # training set 
-def prepare_training_set(numbers_from_mnist):
+def prepare_dataset(numbers_from_mnist):
 
-    training_set = {}
+    prepared_dataset = {}
         
     dataset = [] # training set x
     dataset_y = [] # training set y
@@ -76,18 +76,18 @@ def prepare_training_set(numbers_from_mnist):
             digit_list[digit] = 1
             dataset_y.append(list(digit_list)) # we check whether it is a drawing of the digit for which we are creating the perceptron
     
-    dataset.reverse()
-    dataset_y.reverse()
-           
-    dataset = np.array(dataset)
-    dataset_y = np.array(dataset_y)
+    #dataset.reverse()
+    #dataset_y.reverse()
             
-    training_set['x'] = dataset
-    training_set['y'] = dataset_y
+    prepared_dataset['x'] = np.array(dataset)
+    prepared_dataset['y'] = np.array(dataset_y)
 
-    return training_set
+    print(prepared_dataset['x'][0], prepared_dataset['y'][0])
+
+    return prepared_dataset
         
 
 
 if __name__ == "__main__":
-    print(len(getting_numbers_from_mnist()[0]))
+    train_dict, test_dict, numbers_from_mnist = getting_numbers_from_mnist()
+    prepare_dataset(numbers_from_mnist)
