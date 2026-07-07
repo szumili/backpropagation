@@ -27,6 +27,7 @@ class Grid(QWidget):
 
         train_dict, test_dict, self.numbers_from_mnist = getting_numbers_from_mnist()
         self.train_set = prepare_dataset(train_dict)
+        self.test_set = prepare_dataset(test_dict)
         self.nn_create()
 
         self.drawing = True
