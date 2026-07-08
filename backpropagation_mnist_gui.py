@@ -26,8 +26,8 @@ class Grid(QWidget):
         self.buttons = [[QPushButton(self) for _ in range(width)] for _ in range(height)]
 
         train_dict, test_dict, self.numbers_from_mnist = getting_numbers_from_mnist()
-        self.train_set = prepare_dataset(train_dict)
-        self.test_set = prepare_dataset(test_dict)
+        self.train_set = prepare_dataset(train_dict, 'train')
+        self.test_set = prepare_dataset(test_dict, 'test')
         self.nn_create()
 
         self.drawing = True
@@ -311,10 +311,12 @@ class Grid(QWidget):
     
     def nn_train(self):  
 
-        for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
-            self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
+        #for i in tqdm(range(1000), desc="Training the neural network..."): 
+        #    self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
 
-        self.network.save_weights()
+        #self.network.save_weights()
+
+        QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
 
 
 
