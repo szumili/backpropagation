@@ -17,8 +17,8 @@ def metrics(train_set, test_set, neural_network):
     y_label_train = np.argmax(train_set['y'], axis=1)
     y_label_test = np.argmax(test_set['y'], axis=1)
 
-    y_pred_train = [neural_network.predict(digit) for digit in tqdm(train_set['x'])]
-    y_pred_test = [neural_network.predict(digit) for digit in tqdm(test_set['x'])]
+    y_pred_train = [neural_network.predict(digit) for digit in tqdm(train_set['x'], desc="Predicting y_train")]
+    y_pred_test = [neural_network.predict(digit) for digit in tqdm(test_set['x'], desc="Predicting y_test")]
 
     y_pred_label_train = np.argmax(y_pred_train, axis=1)
     y_pred_label_test = np.argmax(y_pred_test, axis=1)
@@ -32,7 +32,7 @@ def metrics(train_set, test_set, neural_network):
     return accuracy_train, accuracy_test, cr_train, cr_test
 
 
-
+'''
 if __name__ == "__main__":
 
     train_dict, test_dict, numbers_from_mnist = getting_numbers_from_mnist()
@@ -42,3 +42,4 @@ if __name__ == "__main__":
 
     print(metrics(train_set, test_set, network))
 
+'''
