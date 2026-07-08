@@ -8,6 +8,7 @@ from random import choice
 from utils import get_matrix
 from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
 from nn import Neural_Network
+from metrics import metrics
 
 from tqdm import tqdm
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
@@ -302,7 +303,21 @@ class Grid(QWidget):
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
 
 
+    def show_details(self):
 
+        QMessageBox.information(
+            self,
+            "Szczegółowe wyniki",
+            "Tutaj będzie tabela:\n\n"
+            "TRAIN:\n"
+            "Precision: ...\n"
+            "Recall: ...\n"
+            "F1: ...\n\n"
+            "TEST:\n"
+            "Precision: ...\n"
+            "Recall: ...\n"
+            "F1: ..."
+        )
 
     def nn_create(self):
         self.network = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
@@ -316,8 +331,26 @@ class Grid(QWidget):
 
         #self.network.save_weights()
 
-        QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
+        #QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
 
+        accuracy_train, accuracy_test, cr_train, cr_test = metrics(self.train_set, self.test_set, self.network)
+       
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Wyniki")
+        msg.setText(
+            f"Trafność train: {round(accuracy_train*100, 2)}%\n"
+            f"Trafność test: {round(accuracy_test*100, 2)}%"
+        )
+
+        show_more_button = msg.addButton("Więcej", QMessageBox.ActionRole)
+        msg.addButton(QMessageBox.Ok)
+
+        msg.exec_()
+
+        if msg.clickedButton() == show_more_button:
+            self.show_details()
+
+        
 
 
     # guessing
