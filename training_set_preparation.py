@@ -55,13 +55,13 @@ def fourier_transform(x):
 
 
 # training set 
-def prepare_dataset(numbers_from_mnist):
+def prepare_dataset(numbers_from_mnist, tt):
 
     prepared_dataset = {}
         
     dataset = [] # training set x
     dataset_y = [] # training set y
-    for i, digit in enumerate(tqdm(numbers_from_mnist, desc="Loading digits")):
+    for digit in tqdm(numbers_from_mnist, desc=f"Loading digits - {tt}"):
         for digit_pattern in numbers_from_mnist[digit]:
 
             example1 = digit_pattern
