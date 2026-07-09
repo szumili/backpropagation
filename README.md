@@ -25,7 +25,7 @@ This project implements a neural network with backpropagation to recognize handw
 
 4. Recognition:
     - Click "What digit is this?" to classify the drawn digit
-    - The system will display the most probable digit and a confidence histogram
+    - The system will display the most probable digit and bar chart of per-class confidence scores
 
 5. Training:
     - "Train" button trains the network on MNIST data
