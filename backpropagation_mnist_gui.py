@@ -71,6 +71,11 @@ class Grid(QWidget):
         buttonTraining.clicked.connect(self.nn_train)
         self.layoutButtons.addWidget(buttonTraining)
 
+        # metrics
+        buttonMetrics = QPushButton('Performance')
+        buttonMetrics.clicked.connect(self.performance)
+        self.layoutButtons.addWidget(buttonMetrics)
+
         # guessing
         buttonGuess = QPushButton('What digit is this?')
         buttonGuess.clicked.connect(self.guess_digit)
@@ -303,6 +308,25 @@ class Grid(QWidget):
                 self.buttons[row][col].setStyleSheet(f"background-color: {color}; border: 1px solid black") # colouring with the correct colour
 
 
+
+
+    def nn_create(self):
+        self.network = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
+        return self.network
+
+    
+    def nn_train(self):  
+
+        #for i in tqdm(range(1000), desc="Training the neural network..."): 
+        #    self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
+
+        #self.network.save_weights()
+
+        #QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
+
+        self.performance()
+
+    
     def show_details(self):
 
         QMessageBox.information(
@@ -319,19 +343,8 @@ class Grid(QWidget):
             "F1: ..."
         )
 
-    def nn_create(self):
-        self.network = Neural_Network([2*self.width*self.height, 130, 64, 32, 10]) # creating a neural network
-        return self.network
 
-    
-    def nn_train(self):  
-
-        #for i in tqdm(range(1000), desc="Training the neural network..."): 
-        #    self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
-
-        #self.network.save_weights()
-
-        #QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
+    def performance(self):
 
         accuracy_train, accuracy_test, cr_train, cr_test = metrics(self.train_set, self.test_set, self.network)
        
@@ -350,9 +363,9 @@ class Grid(QWidget):
         if msg.clickedButton() == show_more_button:
             self.show_details()
 
+
+
         
-
-
     # guessing
     def guess_digit(self):
             
@@ -375,7 +388,7 @@ class Grid(QWidget):
             
             chosen_text = '\n'.join(['Predicted digit: ', str(chosen_digit)])
 
-            self.histogram()
+            self.bar_plot()
 
             QMessageBox.about(self, "Prediction", chosen_text)
 
@@ -383,19 +396,26 @@ class Grid(QWidget):
             print("Error:", e)
 
 
-    def histogram(self):
+    def bar_plot(self):
         try:
             plt.figure(1)
             plt.clf() # clear
 
+            plt.ylim(0, 1.1)
+
             names = list(self.scores.keys())
             values = list(self.scores.values())
-            plt.bar(range(len(self.scores)), values, tick_label=names)
+            bars = plt.bar(range(len(self.scores)), values, tick_label=names)
+
+            ax = plt.gca()
+            ax.bar_label(bars, fmt='%.2f', padding=2, fontsize=11)
+
+            plt.title('Per-class Confidence Scores', fontsize=14, fontweight='bold', pad=15)
 
             plt.show(block=False)
 
         except:
-            print('error: histogram')
+            print('error: barplot')
 
 
 
