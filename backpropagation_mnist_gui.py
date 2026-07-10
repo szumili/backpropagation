@@ -11,7 +11,7 @@ from nn import Neural_Network
 from metrics import metrics
 
 from tqdm import tqdm
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox, QDialog, QTableWidget, QTableWidgetItem, QLabel
 from PyQt5.QtCore import Qt
 
 
@@ -326,33 +326,73 @@ class Grid(QWidget):
 
         self.performance()
 
-    
-    def show_details(self):
+    def fill_table(self, table, report):
 
-        QMessageBox.information(
-            self,
-            "Szczegółowe wyniki",
-            "Tutaj będzie tabela:\n\n"
-            "TRAIN:\n"
-            "Precision: ...\n"
-            "Recall: ...\n"
-            "F1: ...\n\n"
-            "TEST:\n"
-            "Precision: ...\n"
-            "Recall: ...\n"
-            "F1: ..."
-        )
+
+        table.setRowCount(12)
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(["Digit", "Precision", "Recall", "F1 score"])
+
+        for i in range(10):
+            table.setItem(i, 0, QTableWidgetItem(str(i)))
+            table.setItem(i, 1, QTableWidgetItem(f"{report[str(i)]['precision']*100:.2f}%"))
+            table.setItem(i, 2, QTableWidgetItem(f"{report[str(i)]['recall']*100:.2f}%"))
+            table.setItem(i, 3, QTableWidgetItem(f"{report[str(i)]['f1-score']*100:.2f}%"))
+
+        for i, key in enumerate(['macro avg', 'weighted avg']):
+            table.setItem(10+i, 0, QTableWidgetItem(key))
+            table.setItem(10+i, 1, QTableWidgetItem(f"{report[key]['precision']*100:.2f}%"))
+            table.setItem(10+i, 2, QTableWidgetItem(f"{report[key]['recall']*100:.2f}%"))
+            table.setItem(10+i, 3, QTableWidgetItem(f"{report[key]['f1-score']*100:.2f}%"))
+
+        table.resizeColumnsToContents()
+
+    def show_details(self, train_report, test_report):
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Results")
+
+        layoutResults = QHBoxLayout()
+
+
+        layoutTrain = QVBoxLayout()
+
+        label_train = QLabel("TRAIN")
+        layoutTrain.addWidget(label_train)
+
+        table_train = QTableWidget()
+        self.fill_table(table_train, train_report)
+        layoutTrain.addWidget(table_train)
+
+
+        layoutTest = QVBoxLayout()
+
+        label_test = QLabel("TEST")
+        layoutTest.addWidget(label_test)
+
+        table_test = QTableWidget()
+        self.fill_table(table_test, test_report)
+        layoutTest.addWidget(table_test)
+
+
+        layoutResults.addLayout(layoutTrain)
+        layoutResults.addLayout(layoutTest)
+
+        dialog.setLayout(layoutResults)
+        dialog.resize(800, 600)
+        dialog.exec_()
+
 
 
     def performance(self):
 
         accuracy_train, accuracy_test, cr_train, cr_test = metrics(self.train_set, self.test_set, self.network)
-       
+
         msg = QMessageBox(self)
-        msg.setWindowTitle("Wyniki")
+        msg.setWindowTitle("Results")
         msg.setText(
-            f"Trafność train: {round(accuracy_train*100, 2)}%\n"
-            f"Trafność test: {round(accuracy_test*100, 2)}%"
+            f"Accuracy - train: {round(accuracy_train*100, 2)}%\n"
+            f"Accuracy - test: {round(accuracy_test*100, 2)}%"
         )
 
         show_more_button = msg.addButton("Więcej", QMessageBox.ActionRole)
@@ -361,7 +401,7 @@ class Grid(QWidget):
         msg.exec_()
 
         if msg.clickedButton() == show_more_button:
-            self.show_details()
+            self.show_details(cr_train, cr_test)
 
 
 
