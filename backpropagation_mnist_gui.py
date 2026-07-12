@@ -317,14 +317,25 @@ class Grid(QWidget):
     
     def nn_train(self):  
 
-        #for i in tqdm(range(1000), desc="Training the neural network..."): 
-        #    self.network.train(self.train_set['x'], self.train_set['y']) # training the network on the training set
+        for i in tqdm(range(200), desc="Training the neural network..."): 
+            perm = np.random.permutation(len(self.train_set['x']))
+            x_train = self.train_set['x'][perm]
+            y_train = self.train_set['y'][perm]
 
-        #self.network.save_weights()
+            #self.network.train(x_train, y_train) # training the network on the training set
 
-        #QMessageBox.about(self, "Wyniki", 'tutaj będą wyniki na train i test')
+            batch_size = 64
+
+            for start in range(0, len(x_train), batch_size):
+                x_batch = x_train[start:start + batch_size]
+                y_batch = y_train[start:start + batch_size]
+
+                self.network.train(x_batch, y_batch)
+
+        self.network.save_weights()
 
         self.performance()
+
 
     def fill_table(self, table, report):
 
@@ -346,6 +357,7 @@ class Grid(QWidget):
             table.setItem(10+i, 3, QTableWidgetItem(f"{report[key]['f1-score']*100:.2f}%"))
 
         table.resizeColumnsToContents()
+
 
     def show_details(self, train_report, test_report):
 
@@ -405,7 +417,6 @@ class Grid(QWidget):
 
 
 
-        
     # guessing
     def guess_digit(self):
             
