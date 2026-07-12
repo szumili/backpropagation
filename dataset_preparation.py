@@ -1,9 +1,7 @@
 import numpy as np
 
 from keras.datasets import mnist
-from random import sample 
 from tqdm import tqdm
-
 
 
 def transform_set(x_set):
@@ -33,9 +31,9 @@ def getting_numbers_from_mnist():
     numbers_from_mnist = {}
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    print(len(x_train), len(x_test))
-    print(np.bincount(y_train))
-    print(np.bincount(y_test))
+    #print(len(x_train), len(x_test))
+    #print(np.bincount(y_train))
+    #print(np.bincount(y_test))
 
     x_train = transform_set(x_train)
     x_test = transform_set(x_test)
@@ -82,12 +80,5 @@ def prepare_dataset(numbers_from_mnist, tt):
     prepared_dataset['x'] = np.array(dataset)
     prepared_dataset['y'] = np.array(dataset_y)
 
-    print(prepared_dataset['x'][0], prepared_dataset['y'][0])
-
     return prepared_dataset
         
-
-
-if __name__ == "__main__":
-    train_dict, test_dict, numbers_from_mnist = getting_numbers_from_mnist()
-    prepare_dataset(numbers_from_mnist)
