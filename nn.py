@@ -18,7 +18,7 @@ class Neural_Network():
 
             
         try:
-            print('Loading weights from files...')
+            #print('Loading weights from files...')
 
             self.W1 = load_weights('weights1.txt')
             self.W2 = load_weights('weights2.txt')
