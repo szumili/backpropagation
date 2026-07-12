@@ -341,20 +341,22 @@ class Grid(QWidget):
 
 
         table.setRowCount(12)
-        table.setColumnCount(4)
-        table.setHorizontalHeaderLabels(["Digit", "Precision", "Recall", "F1 score"])
+        table.setColumnCount(5)
+        table.setHorizontalHeaderLabels(["Digit", "Precision", "Recall", "F1 score", "Support"])
 
         for i in range(10):
             table.setItem(i, 0, QTableWidgetItem(str(i)))
             table.setItem(i, 1, QTableWidgetItem(f"{report[str(i)]['precision']*100:.2f}%"))
             table.setItem(i, 2, QTableWidgetItem(f"{report[str(i)]['recall']*100:.2f}%"))
             table.setItem(i, 3, QTableWidgetItem(f"{report[str(i)]['f1-score']*100:.2f}%"))
+            table.setItem(i, 4, QTableWidgetItem(f"{report[str(i)]['support']}"))
 
         for i, key in enumerate(['macro avg', 'weighted avg']):
             table.setItem(10+i, 0, QTableWidgetItem(key))
             table.setItem(10+i, 1, QTableWidgetItem(f"{report[key]['precision']*100:.2f}%"))
             table.setItem(10+i, 2, QTableWidgetItem(f"{report[key]['recall']*100:.2f}%"))
             table.setItem(10+i, 3, QTableWidgetItem(f"{report[key]['f1-score']*100:.2f}%"))
+            table.setItem(10+i, 4, QTableWidgetItem(f"{report[key]['support']}"))
 
         table.resizeColumnsToContents()
 
@@ -391,7 +393,7 @@ class Grid(QWidget):
         layoutResults.addLayout(layoutTest)
 
         dialog.setLayout(layoutResults)
-        dialog.resize(800, 600)
+        dialog.resize(850, 550)
         dialog.exec_()
 
 
