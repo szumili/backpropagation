@@ -1,16 +1,9 @@
 import numpy as np
 
-from keras.datasets import mnist
-from random import sample 
+from sklearn.metrics import accuracy_score, classification_report 
 from tqdm import tqdm
 
-from random import choice
 
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-
-
-from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
-from nn import Neural_Network
 
 def metrics(train_set, test_set, neural_network):
 
@@ -31,15 +24,3 @@ def metrics(train_set, test_set, neural_network):
     
     return accuracy_train, accuracy_test, cr_train, cr_test
 
-
-'''
-if __name__ == "__main__":
-
-    train_dict, test_dict, numbers_from_mnist = getting_numbers_from_mnist()
-    train_set = prepare_dataset(train_dict, 'train')
-    test_set = prepare_dataset(test_dict, 'test')
-    network = Neural_Network([2*28*28, 130, 64, 32, 10])
-
-    print(metrics(train_set, test_set, network))
-
-'''
