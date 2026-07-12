@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from random import choice
 
 from utils import get_matrix
-from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
+from dataset_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
 from nn import Neural_Network
 from metrics import metrics
 
@@ -444,7 +444,7 @@ class Grid(QWidget):
             QMessageBox.about(self, "Prediction", chosen_text)
 
         except Exception as e:
-            print("Error:", e)
+            print("error:", e)
 
 
     def bar_plot(self):
