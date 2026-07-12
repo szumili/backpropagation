@@ -11,7 +11,7 @@ def load_weights(weights_file):
     data = data.strip("\n")
     split_str = data.split("[")
     
-    for i, s in enumerate(tqdm(split_str[1:], desc="Loading weights - %s" % weights_file)):
+    for s in tqdm(split_str[1:], desc="Loading weights - %s" % weights_file):
         temp_list = []
         split_s = s.split("]")
         if len(split_s) > 1:
@@ -27,7 +27,7 @@ def load_weights(weights_file):
 def save_weights_to_file(W, file_name):
 
     with open((file_name), 'w') as file:
-        for i, el in enumerate(tqdm(W, desc="Saving weights - %s" % file_name)):
+        for el in tqdm(W, desc="Saving weights - %s" % file_name):
             file.write(str(el))
             file.write(' ')
         file.write('\n')

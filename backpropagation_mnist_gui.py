@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 from random import choice
 
 from utils import get_matrix
-from training_set_preparation import getting_numbers_from_mnist, fourier_transform, prepare_training_set
+from dataset_preparation import getting_numbers_from_mnist, fourier_transform, prepare_dataset
 from nn import Neural_Network
+from metrics import metrics
 
 from tqdm import tqdm
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox, QDialog, QTableWidget, QTableWidgetItem, QLabel
 from PyQt5.QtCore import Qt
 
 
@@ -25,8 +26,9 @@ class Grid(QWidget):
         self.grid = [[False for _ in range(width)] for _ in range(height)]
         self.buttons = [[QPushButton(self) for _ in range(width)] for _ in range(height)]
 
-        self.numbers_from_mnist = getting_numbers_from_mnist()
-        self.training_set = prepare_training_set(self.numbers_from_mnist)
+        train_dict, test_dict, self.numbers_from_mnist = getting_numbers_from_mnist()
+        self.train_set = prepare_dataset(train_dict, 'train')
+        self.test_set = prepare_dataset(test_dict, 'test')
         self.nn_create()
 
         self.drawing = True
@@ -68,6 +70,11 @@ class Grid(QWidget):
         buttonTraining = QPushButton('Train')
         buttonTraining.clicked.connect(self.nn_train)
         self.layoutButtons.addWidget(buttonTraining)
+
+        # metrics
+        buttonMetrics = QPushButton('Performance')
+        buttonMetrics.clicked.connect(self.performance)
+        self.layoutButtons.addWidget(buttonMetrics)
 
         # guessing
         buttonGuess = QPushButton('What digit is this?')
@@ -205,7 +212,7 @@ class Grid(QWidget):
                         color = "black"
                         self.buttons[el[0]][el[1]].setStyleSheet(f"background-color: {color}; border: 1px solid black")
                 except:
-                    print('error')
+                    print('error: mouseMoveEvent')
 
             self.lastPoint = event.pos()
             self.update()
@@ -310,10 +317,103 @@ class Grid(QWidget):
     
     def nn_train(self):  
 
-        for i, j in enumerate(tqdm(range(1000), desc="Training the neural network...")): 
-            self.network.train(self.training_set['x'], self.training_set['y']) # training the network on the training set
+        for i in tqdm(range(200), desc="Training the neural network..."): 
+            perm = np.random.permutation(len(self.train_set['x']))
+            x_train = self.train_set['x'][perm]
+            y_train = self.train_set['y'][perm]
+
+            #self.network.train(x_train, y_train) # training the network on the training set
+
+            batch_size = 64
+
+            for start in range(0, len(x_train), batch_size):
+                x_batch = x_train[start:start + batch_size]
+                y_batch = y_train[start:start + batch_size]
+
+                self.network.train(x_batch, y_batch)
 
         self.network.save_weights()
+
+        self.performance()
+
+
+    def fill_table(self, table, report):
+
+
+        table.setRowCount(12)
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(["Digit", "Precision", "Recall", "F1 score"])
+
+        for i in range(10):
+            table.setItem(i, 0, QTableWidgetItem(str(i)))
+            table.setItem(i, 1, QTableWidgetItem(f"{report[str(i)]['precision']*100:.2f}%"))
+            table.setItem(i, 2, QTableWidgetItem(f"{report[str(i)]['recall']*100:.2f}%"))
+            table.setItem(i, 3, QTableWidgetItem(f"{report[str(i)]['f1-score']*100:.2f}%"))
+
+        for i, key in enumerate(['macro avg', 'weighted avg']):
+            table.setItem(10+i, 0, QTableWidgetItem(key))
+            table.setItem(10+i, 1, QTableWidgetItem(f"{report[key]['precision']*100:.2f}%"))
+            table.setItem(10+i, 2, QTableWidgetItem(f"{report[key]['recall']*100:.2f}%"))
+            table.setItem(10+i, 3, QTableWidgetItem(f"{report[key]['f1-score']*100:.2f}%"))
+
+        table.resizeColumnsToContents()
+
+
+    def show_details(self, train_report, test_report):
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Results")
+
+        layoutResults = QHBoxLayout()
+
+
+        layoutTrain = QVBoxLayout()
+
+        label_train = QLabel("TRAIN")
+        layoutTrain.addWidget(label_train)
+
+        table_train = QTableWidget()
+        self.fill_table(table_train, train_report)
+        layoutTrain.addWidget(table_train)
+
+
+        layoutTest = QVBoxLayout()
+
+        label_test = QLabel("TEST")
+        layoutTest.addWidget(label_test)
+
+        table_test = QTableWidget()
+        self.fill_table(table_test, test_report)
+        layoutTest.addWidget(table_test)
+
+
+        layoutResults.addLayout(layoutTrain)
+        layoutResults.addLayout(layoutTest)
+
+        dialog.setLayout(layoutResults)
+        dialog.resize(800, 600)
+        dialog.exec_()
+
+
+
+    def performance(self):
+
+        accuracy_train, accuracy_test, cr_train, cr_test = metrics(self.train_set, self.test_set, self.network)
+
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Results")
+        msg.setText(
+            f"Accuracy - train: {round(accuracy_train*100, 2)}%\n"
+            f"Accuracy - test: {round(accuracy_test*100, 2)}%"
+        )
+
+        show_more_button = msg.addButton("Więcej", QMessageBox.ActionRole)
+        msg.addButton(QMessageBox.Ok)
+
+        msg.exec_()
+
+        if msg.clickedButton() == show_more_button:
+            self.show_details(cr_train, cr_test)
 
 
 
@@ -339,27 +439,34 @@ class Grid(QWidget):
             
             chosen_text = '\n'.join(['Predicted digit: ', str(chosen_digit)])
 
-            self.histogram()
+            self.bar_plot()
 
             QMessageBox.about(self, "Prediction", chosen_text)
 
         except Exception as e:
-            print("Error:", e)
+            print("error:", e)
 
 
-    def histogram(self):
+    def bar_plot(self):
         try:
             plt.figure(1)
             plt.clf() # clear
 
+            plt.ylim(0, 1.1)
+
             names = list(self.scores.keys())
             values = list(self.scores.values())
-            plt.bar(range(len(self.scores)), values, tick_label=names)
+            bars = plt.bar(range(len(self.scores)), values, tick_label=names)
+
+            ax = plt.gca()
+            ax.bar_label(bars, fmt='%.2f', padding=2, fontsize=11)
+
+            plt.title('Per-class Confidence Scores', fontsize=14, fontweight='bold', pad=15)
 
             plt.show(block=False)
 
         except:
-            print('error')
+            print('error: barplot')
 
 
 
