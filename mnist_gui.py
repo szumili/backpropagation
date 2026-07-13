@@ -11,7 +11,7 @@ from nn import Neural_Network
 from metrics import metrics
 
 from tqdm import tqdm
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox, QDialog, QTableWidget, QTableWidgetItem, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QMessageBox, QDialog, QTableWidget, QTableWidgetItem, QLabel, QPlainTextEdit
 from PyQt5.QtCore import Qt
 
 
@@ -252,7 +252,21 @@ class Grid(QWidget):
         # show in messege box as 0 and 1
         m = [' '.join(str([int(e) for e in el])) for el in matrix] # changing into 0, 1 and joining columns using spaces
         joined_matrix = '\n'.join(m) # joining rows using \n 
-        QMessageBox.about(self, "Matrix", joined_matrix)
+        #QMessageBox.about(self, "Matrix", joined_matrix)
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Matrix")
+        dialog.resize(850, 500)
+
+        layout = QVBoxLayout(dialog)
+
+        text = QPlainTextEdit()
+        text.setReadOnly(True)
+        text.setPlainText(joined_matrix)
+
+        layout.addWidget(text)
+        
+        dialog.exec_()
 
 
     # cleaning the matrix
