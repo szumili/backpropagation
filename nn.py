@@ -20,10 +20,10 @@ class Neural_Network():
         try:
             #print('Loading weights from files...')
 
-            self.W1 = load_weights('weights1.txt')
-            self.W2 = load_weights('weights2.txt')
-            self.W3 = load_weights('weights3.txt')
-            self.W4 = load_weights('weights4.txt')
+            self.W1 = load_weights('weights/weights1.txt')
+            self.W2 = load_weights('weights/weights2.txt')
+            self.W3 = load_weights('weights/weights3.txt')
+            self.W4 = load_weights('weights/weights4.txt')
 
         except:
 
@@ -80,10 +80,10 @@ class Neural_Network():
 
     def save_weights(self):
 
-        save_weights_to_file(self.W1, 'weights1.txt')
-        save_weights_to_file(self.W2, 'weights2.txt')
-        save_weights_to_file(self.W3, 'weights3.txt')
-        save_weights_to_file(self.W4, 'weights4.txt')
+        save_weights_to_file(self.W1, 'weights/weights1.txt')
+        save_weights_to_file(self.W2, 'weights/weights2.txt')
+        save_weights_to_file(self.W3, 'weights/weights3.txt')
+        save_weights_to_file(self.W4, 'weights/weights4.txt')
 
     
     def train(self, x, y):

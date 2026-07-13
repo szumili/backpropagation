@@ -1,6 +1,7 @@
 import numpy as np
 
-from keras.datasets import mnist
+#from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
 from tqdm import tqdm
 
 
