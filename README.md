@@ -2,6 +2,8 @@
 
 This project implements a neural network with backpropagation to recognize handwritten digits from the **MNIST dataset**. The solution includes Fourier transform features as additional inputs to improve recognition accuracy.
 
+Tested with `Python 3.10.8`
+
 ## Features
 - Interactive interface for drawing digits
 - Pre-trained weights loading/saving functionality (*weights1.txt, weights2.txt, weights3.txt, weights4.txt*) 
@@ -39,4 +41,5 @@ This project implements a neural network with backpropagation to recognize handw
 
 7. Predefined Weights:
     - The provided weight files (*weights1.txt, weights2.txt, weights3.txt, weights4.txt*) were generated during training using a batch size of 64 and 200 epochs
-    - The model using these weights achieves approximately **96.61% accuracy on the training set** and **93.89% accuracy on the test set**.
+    - The model using these weights achieves approximately **96.61% accuracy on the training set** and **93.89% accuracy on the test set**
+    - Predefined weights are stored in the `weights/` directory
